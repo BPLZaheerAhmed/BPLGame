@@ -1,0 +1,13 @@
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\bin\PreGameRESTAPI.dll.config
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\bin\PreGameRESTAPI.dll
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\bin\PreGameRESTAPI.pdb
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\bin\MySql.Data.dll
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\bin\MySql.Web.dll
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\obj\Debug\PreGameRESTAPI.dll
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\obj\Debug\PreGameRESTAPI.pdb
+D:\Sync\MY_VSTS\PreGame\PreGameRESTAPI\obj\Debug\PreGameRESTAPI.csprojResolveAssemblyReference.cache
+E:\BPL\PreGame\PreGame(Latest)\PreGameRESTAPI\bin\PreGameRESTAPI.dll
+E:\BPL\PreGame\PreGame(Latest)\PreGameRESTAPI\bin\PreGameRESTAPI.pdb
+E:\BPL\PreGame\PreGame(Latest)\PreGameRESTAPI\obj\Debug\PreGameRESTAPI.csprojResolveAssemblyReference.cache
+E:\BPL\PreGame\PreGame(Latest)\PreGameRESTAPI\obj\Debug\PreGameRESTAPI.dll
+E:\BPL\PreGame\PreGame(Latest)\PreGameRESTAPI\obj\Debug\PreGameRESTAPI.pdb
