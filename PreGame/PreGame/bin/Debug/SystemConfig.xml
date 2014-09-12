@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <Table1>
+    <StoreID>2</StoreID>
+    <PGIP>localhost:5642</PGIP>
+    <Interval>5</Interval>
+    <DWIP>192.168.1.2:84</DWIP>
+  </Table1>
+</NewDataSet>

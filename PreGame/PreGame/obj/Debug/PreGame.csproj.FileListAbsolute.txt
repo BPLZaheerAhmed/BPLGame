@@ -8,16 +8,3 @@ D:\Sync\MY_VSTS\PreGame\PreGame\obj\Debug\PreGame.csproj.GenerateResource.Cache
 D:\Sync\MY_VSTS\PreGame\PreGame\obj\Debug\PreGame.exe
 D:\Sync\MY_VSTS\PreGame\PreGame\obj\Debug\PreGame.pdb
 D:\Sync\MY_VSTS\PreGame\PreGame\obj\Debug\PreGame.csprojResolveAssemblyReference.cache
-E:\BPL\PreGame\PreGame(Latest)\PreGame\bin\Debug\PreGame.exe.config
-E:\BPL\PreGame\PreGame(Latest)\PreGame\obj\Debug\PreGame.exe
-E:\BPL\PreGame\PreGame(Latest)\PreGame\obj\Debug\PreGame.pdb
-E:\BPL\PreGame\PreGame(Latest)\PreGame\bin\Debug\PreGame.exe
-E:\BPL\PreGame\PreGame(Latest)\PreGame\bin\Debug\PreGame.pdb
-E:\BPL\PreGame\PreGame(Latest)\PreGame\obj\Debug\PreGame.csprojResolveAssemblyReference.cache
-E:\BPL\PreGame\PreGame(Latest)\PreGame\obj\Debug\PreGame.frmPreGame.resources
-E:\BPL\PreGame\PreGame(Latest)\PreGame\obj\Debug\PreGame.PreGameController.resources
-E:\BPL\PreGame\PreGame(Latest)\PreGame\obj\Debug\PreGame.Properties.Resources.resources
-E:\BPL\PreGame\PreGame(Latest)\PreGame\obj\Debug\PreGame.csproj.GenerateResource.Cache
-E:\BPL\PreGame\BPLGame\BPLGame\PreGame\PreGame\bin\Debug\PreGame.exe.config
-E:\BPL\PreGame\BPLGame\BPLGame\PreGame\PreGame\obj\Debug\PreGame.exe
-E:\BPL\PreGame\BPLGame\BPLGame\PreGame\PreGame\obj\Debug\PreGame.pdb

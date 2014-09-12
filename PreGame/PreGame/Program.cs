@@ -15,6 +15,7 @@ namespace PreGame
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new frmPreGame());
             Application.Run(new PreGameController());
         }
     }

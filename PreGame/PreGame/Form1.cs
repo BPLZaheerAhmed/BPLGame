@@ -17,7 +17,7 @@ namespace PreGame
         {
             InitializeComponent();
             dwvc = new dinnerwere.VirtualClientClient();
-            GetAllTickets();
+          //  GetAllTickets();
         }
 
 
@@ -29,10 +29,18 @@ namespace PreGame
 
             Int32 pendingID =  dwvc.TrialCommit(0, trialticker ).PendingID;
 
-            MessageBox.Show(dwvc.CommitPendingTicketWithNoTransaction(pendingID).ToString());
-            string str =  dwvc.Login(111, "");
-            
-            GetAllTickets();
+            Int32 ticketId = dwvc.CommitPendingTicketWithNoTransaction(pendingID);
+
+            wsPerson p = new wsPerson();
+            p.MEMBERSHIP_ID = "123";
+            p.FNAME = "Owais Aized";
+            Int32[] arr = new Int32[1];
+            arr[0] = ticketId;
+           Int32 customerId =  dwvc.AddCustomer(0, p);
+           dwvc.AssociateCustomerTickets(0, arr, customerId);
+
+
+
         }
 
         private void GetAllTickets()

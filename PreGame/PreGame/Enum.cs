@@ -22,7 +22,8 @@ namespace PreGame
             Cancel = 5,
             Paid = 6,
             TicketCanceledByPOS = 7,
-            ConfirmedPaidInPOS = 8
+            ConfirmedPaidInPOS = 8,
+            CancelByPreGame = 9
 
         };
  

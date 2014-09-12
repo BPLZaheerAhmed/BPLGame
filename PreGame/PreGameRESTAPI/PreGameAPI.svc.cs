@@ -27,13 +27,9 @@ namespace PreGameRESTAPI
                iStatus = Convert.ToInt32(Status); 
             }
 
-             bool? Is_Updated = null; 
-            if (isupdated != "-1")
-            {
-                Is_Updated  = isupdated =="1" ? true : false; 
-            }
+          
 
-            return db.GetAllTickets(iStatus, Is_Updated, Convert.ToInt16(StoreID));
+            return db.GetAllTickets(iStatus, Convert.ToInt32(isupdated), Convert.ToInt16(StoreID));
 
         }
 
@@ -46,7 +42,7 @@ namespace PreGameRESTAPI
         {
            
             DBPreGameAPI api = new DBPreGameAPI();
-            return api.UpdateTicketStatus(Convert.ToInt64(TicketID), Convert.ToBoolean(IsUpdated), Convert.ToInt16(status), Convert.ToInt64(POS_Ticket_ID)).ToString();
+            return api.UpdateTicketStatus(Convert.ToInt64(TicketID), Convert.ToInt32(IsUpdated), Convert.ToInt16(status), Convert.ToInt64(POS_Ticket_ID)).ToString();
             
         }
 
@@ -62,6 +58,17 @@ namespace PreGameRESTAPI
 
        }
 
+
+       [WebInvoke(Method = "GET",
+                    ResponseFormat = WebMessageFormat.Json,
+                    UriTemplate = "/GetTicketUsers/{Ticket_ID}")]
+       public List<Dictionary<string, object>> GetTicketUsers(string Ticket_ID)
+       {
+
+           DBPreGameAPI api = new DBPreGameAPI();
+           return api.GetTicketUsers(Convert.ToInt64(Ticket_ID));
+
+       }
 
     }
 }

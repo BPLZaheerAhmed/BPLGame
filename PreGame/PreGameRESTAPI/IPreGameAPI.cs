@@ -17,6 +17,9 @@ namespace PreGameRESTAPI
         List<Dictionary<string, object>> GetTickets(string Status, string isupdated, string StoreID);
 
         [OperationContract]
+        List<Dictionary<string, object>> GetTicketUsers(string Ticket_ID);
+
+        [OperationContract]
         string UpdateTicketStatus(string TicketID, string IsUpdated, string status, string POS_Ticket_ID);
 
         [OperationContract]
