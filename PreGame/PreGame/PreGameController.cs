@@ -31,7 +31,7 @@ namespace PreGame
         {
             InitializeComponent();
             ReadConfig();
-          
+
             //dwvc = new dinnerwere.VirtualClientClient("BasicHttpBinding_IVirtualClient", "http://"+ DWIP + "/VirtualClient");
 
             if (dsConfig != null)
@@ -85,7 +85,7 @@ namespace PreGame
                 {
                     MessageBox.Show("UpdateTicketsForClosing : " + ex.Message);
                 }
-                 try
+                try
                 {
                     UpdateTicketsCancelByPreGame();
                 }
@@ -93,7 +93,7 @@ namespace PreGame
                 {
                     MessageBox.Show("UpdateTicketsCancelByPreGame : " + ex.Message);
                 }
-                
+
                 try
                 {
                     UpdateTicketsForPayment();
@@ -193,21 +193,43 @@ namespace PreGame
                                 object pos_ticket_id = 0;
                                 dic.TryGetValue("pos_ticket_id", out pos_ticket_id);
 
+                                object pg_ticket_id = 0;
+                                dic.TryGetValue("id", out pg_ticket_id);
+
                                 object pos_amount_spent = 0;
                                 dic.TryGetValue("pos_amount_spent", out pos_amount_spent);
+
+                                object spending_limit = 0;
+                                dic.TryGetValue("spending_limit", out spending_limit);
+
                                 wsTicket ticket = dwvc.getTicket(Convert.ToInt32(pos_ticket_id));
 
                                 if (ticket.CloseTime != DateTime.MinValue)
                                 {
-                                    PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pos_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.TicketCanceledByPOS);
+                                    PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pg_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.TicketCanceledByPOS);
 
                                 }
                                 else
                                 {
                                     if (ticket.AmountDue != Convert.ToDecimal(pos_amount_spent))
                                     {
-                                        PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pos_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.Shifted);
+                                        PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pg_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.Shifted);
+                                        if (Convert.ToDecimal(ticket.AmountDue) >= Convert.ToDecimal(spending_limit))
+                                        {
+                                            if (!ticket.Name.Contains("(Spending Limit Exceeded)"))
+                                                dwvc.RenameTicket((int)pos_ticket_id, ticket.Name + " (Spending Limit Exceeded)");
 
+                                        }
+                                        else
+                                        {
+
+                                            dwvc.RenameTicket((int)pos_ticket_id, ticket.Name.Replace(" (Spending Limit Exceeded)", ""));
+                                        }
+                                    }
+                                    else if (Convert.ToDecimal(ticket.AmountDue) <= Convert.ToDecimal(spending_limit))
+                                    {
+                                        if (ticket.Name.Contains("(Spending Limit Exceeded)"))
+                                            dwvc.RenameTicket((int)pos_ticket_id, ticket.Name.Replace(" (Spending Limit Exceeded)", ""));
                                     }
                                 }
                                 break;
@@ -215,7 +237,10 @@ namespace PreGame
                                 break;
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        string s = ex.Message;
+                    }
                 }
 
 
@@ -241,6 +266,9 @@ namespace PreGame
                     object value = 0;
                     dic.TryGetValue("status", out value);
 
+                    object pg_ticket_id = 0;
+                    dic.TryGetValue("id", out pg_ticket_id);
+
                     Int16 status = Convert.ToInt16(value);
                     switch (status)
                     {
@@ -254,7 +282,7 @@ namespace PreGame
                             wsTicket ticket = dwvc.getTicket(Convert.ToInt32(pos_ticket_id));
                             dwvc.VoidTicket(0, (int)pos_ticket_id, 25);
 
-                            PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pos_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.Closed);
+                            PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pg_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.Closed);
 
 
                             break;
@@ -281,6 +309,9 @@ namespace PreGame
                     object value = 0;
                     dic.TryGetValue("status", out value);
 
+                    object pg_ticket_id = 0;
+                    dic.TryGetValue("id", out pg_ticket_id);
+
                     Int16 status = Convert.ToInt16(value);
                     switch (status)
                     {
@@ -289,9 +320,22 @@ namespace PreGame
                             object pos_ticket_id = 0;
                             dic.TryGetValue("pos_ticket_id", out pos_ticket_id);
 
-                            wsTicket ticket = dwvc.getTicket(Convert.ToInt32(pos_ticket_id));
-                            dwvc.VoidTicket(0, (int)pos_ticket_id, 25);
-                            PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pos_ticket_id), Convert.ToDecimal(0), (Int32)PreGameTicketStatus.CancelByPreGame);
+                            if (Convert.ToInt64(pos_ticket_id) != 0)
+                            {
+                                wsTicket ticket = dwvc.getTicket(Convert.ToInt32(pos_ticket_id));
+                                if (ticket.AmountDue != 0)
+                                {
+                                    PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pg_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.ReOpenByPOS);
+                                }
+                                else
+                                {
+                                    dwvc.VoidTicket(0, (int)pos_ticket_id, 25);
+                                    PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pg_ticket_id), Convert.ToDecimal(0), (Int32)PreGameTicketStatus.Cancel);
+                                }
+
+                            }
+                            
+
 
                             break;
                         default:
@@ -330,7 +374,7 @@ namespace PreGame
                             wsTicket ticket = dwvc.getTicket(Convert.ToInt32(pos_ticket_id));
                             dwvc.ReopenClosedTicket(0, (int)pos_ticket_id);
                             dwvc.RenameTicket((int)pos_ticket_id, ticket.Name + " (Paid)");
-                            
+
                             wsTransaction trn = new wsTransaction();
                             trn.PaymentAmount = (Decimal)pos_amount_spent;
                             trn.TenderType = "Pre-Game";
@@ -339,14 +383,14 @@ namespace PreGame
 
                             wsTicketChangeResult tResult = dwvc.addTransactionToTicket(0, (int)pos_ticket_id, trn);
                             int i = tResult.NewTransactionID;
-                            PreGameAPICaller.UpdateTicketAmountOnPreGame(Convert.ToInt64(pos_ticket_id), Convert.ToDecimal(ticket.AmountDue), (Int32)PreGameTicketStatus.ConfirmedPaidInPOS);
+                            PreGameAPICaller.UpdateTicketStatusOnPreGame(Convert.ToInt64(pos_ticket_id), (Int32)PreGameTicketStatus.ConfirmedPaidInPOS);
 
                             break;
                         default:
                             break;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                 }
             }
@@ -371,7 +415,7 @@ namespace PreGame
             object Ticket_ID = null;
             dictinory.TryGetValue("ticket_id", out Ticket_ID);
 
-             //Get PinCode
+            //Get PinCode
             object email = null;
             dictinory.TryGetValue("email", out email);
 
@@ -383,7 +427,7 @@ namespace PreGame
             object lname = null;
             dictinory.TryGetValue("last_name", out lname);
 
-            string TicketTitle = title.ToString() + "-" + PicCode.ToString();
+            string TicketTitle = "PreGame-" + PicCode.ToString();
 
 
             wsTrialTicket trialticker = new wsTrialTicket();
@@ -533,9 +577,9 @@ namespace PreGame
                 txtStoreID.Text = dsConfig.Tables[0].Rows[0]["StoreID"].ToString();
                 txtAPIAddress.Text = dsConfig.Tables[0].Rows[0]["PGIP"].ToString();
                 txtInterval.Text = dsConfig.Tables[0].Rows[0]["Interval"].ToString();
-                txtDinnerIP.Text = dsConfig.Tables[0].Rows[0]["DWIP"].ToString() ;
+                txtDinnerIP.Text = dsConfig.Tables[0].Rows[0]["DWIP"].ToString();
                 PreGameAPICaller.PreGameApiIP = txtAPIAddress.Text;
-                DWIP = dsConfig.Tables[0].Rows[0]["DWIP"].ToString() ;
+                DWIP = dsConfig.Tables[0].Rows[0]["DWIP"].ToString();
                 Store_ID = dsConfig.Tables[0].Rows[0]["StoreID"].ToString();
 
 

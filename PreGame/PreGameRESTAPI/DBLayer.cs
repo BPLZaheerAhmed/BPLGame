@@ -35,6 +35,8 @@ namespace PreGameRESTAPI
         public List<Dictionary<string, object>> GetAllTickets(int status,int? IsUpdated, Int16 StoreID)
         {
             MySqlConnection con = OpenConnection();
+
+            UpdateConnectivity(StoreID, con);
             string qry = "select t.*, u.`first_name` ,  u.last_name, u.`email` FROM tbl_tickets t INNER JOIN tbl_users u ON u.id = t.`user_id` WHERE store_id =  " + StoreID;
             if (status != 0)
             {
@@ -54,6 +56,27 @@ namespace PreGameRESTAPI
             
             return ConvertDataTabletoString(dsResult.Tables[0]);
         }
+
+        private void UpdateConnectivity(short StoreID, MySqlConnection conn)
+        {
+            Int32 TimeInterval = 0;
+            
+            MySqlCommand cmdGetInterval = new MySqlCommand("SELECT log_time FROM tbl_stores where id = " + StoreID, conn);
+            Int32 itimeinterval = Convert.ToInt32(cmdGetInterval.ExecuteScalar());
+
+            MySqlCommand cmdSave;
+            MySqlCommand cmdSelect = new MySqlCommand("SELECT COUNT(*) FROM tbl_connectivity WHERE store_id = " + StoreID + " and entry_date > SUBTIME(NOW(), TIME_FORMAT(SEC_TO_TIME(" + itimeinterval + "),'%H:%i:%s'));", conn);
+            Int32 rselect = Convert.ToInt32(cmdSelect.ExecuteScalar());
+            if (rselect == 0)
+            { 
+            cmdSave = new MySqlCommand("INSERT INTO tbl_connectivity (store_id,entry_date) VALUES (" + StoreID + ", now())", conn);
+            cmdSave.ExecuteNonQuery();
+            }
+
+            
+            
+
+        }
         public List<Dictionary<string, object>> GetTicketDataByID(Int64 TickerID)
         {
             MySqlConnection con = OpenConnection();
@@ -66,20 +89,31 @@ namespace PreGameRESTAPI
            return ConvertDataTabletoString(dsResult.Tables[0]);
         }
 
-        public int UpdateTicketStatus(Int64 TickerID, int isUpdated, int Status, Int64 POS_Ticket_ID )
+        public int UpdateTicketStatus(Int64 TickerID, int isUpdated, int status, Int64 POS_Ticket_ID)
         {
             MySqlConnection con = OpenConnection();
-            MySqlCommand cmd = new MySqlCommand("Update tbl_tickets Set status = " + Status + ", is_Updated = " + isUpdated + ", pos_ticket_id = " + POS_Ticket_ID + " where Id = " + TickerID.ToString(), con);
+            MySqlCommand cmd = new MySqlCommand("Update tbl_tickets Set status = " + status.ToString() + ", is_updated_from_pos = 1, pos_ticket_id = " + POS_Ticket_ID + " where Id = " + TickerID.ToString(), con);
             int result = cmd.ExecuteNonQuery();
             con.Close();
             con.Dispose();
             return result;
         }
-        public int UpdateTicketAmount(Int64 POS_Ticket_ID, Int32 status, Decimal pos_amount_spent )
+        public int UpdateTicketAmount(Int64 PG_Ticket_ID, Int32 status, Decimal pos_amount_spent)
         {
             
             MySqlConnection con = OpenConnection();
-            MySqlCommand cmd = new MySqlCommand("Update tbl_tickets Set status = " + status.ToString() + ", pos_amount_spent = " + pos_amount_spent  + ", is_Updated = 2 where POS_Ticket_ID = " + POS_Ticket_ID.ToString(), con);
+            MySqlCommand cmd = new MySqlCommand("Update tbl_tickets Set status = " + status.ToString() + ", pos_amount_spent = " + pos_amount_spent + ", is_updated_from_pos = 1 where id = " + PG_Ticket_ID.ToString(), con);
+            int result = cmd.ExecuteNonQuery();
+            con.Close();
+            con.Dispose();
+            return result;
+        }
+
+        public int UpdateTicketStatus(Int64 POS_Ticket_ID, Int32 status)
+        {
+
+            MySqlConnection con = OpenConnection();
+            MySqlCommand cmd = new MySqlCommand("Update tbl_tickets Set status = " + status.ToString() + ", is_updated_from_pos = 1 where POS_Ticket_ID = " + POS_Ticket_ID.ToString(), con);
             int result = cmd.ExecuteNonQuery();
             con.Close();
             con.Dispose();

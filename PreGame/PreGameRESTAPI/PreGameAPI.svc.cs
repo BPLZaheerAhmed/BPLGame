@@ -46,15 +46,26 @@ namespace PreGameRESTAPI
             
         }
 
-
        [WebInvoke(Method = "GET",
-                      ResponseFormat = WebMessageFormat.Json,
-                      UriTemplate = "/UpdateTicketAmount/{POS_Ticket_ID},{status},{pos_amount_spent}")]
-       public string UpdateTicketAmount(string POS_Ticket_ID, string status, string pos_amount_spent)
+                       ResponseFormat = WebMessageFormat.Json,
+                       UriTemplate = "/UpdateTicketStatusOnly/{POS_Ticket_ID},{status}")]
+       public string UpdateTicketStatusOnly(string POS_Ticket_ID, string status)
        {
 
            DBPreGameAPI api = new DBPreGameAPI();
-           return api.UpdateTicketAmount(Convert.ToInt64(POS_Ticket_ID), Convert.ToInt32(status), Convert.ToDecimal(pos_amount_spent)).ToString();
+           return api.UpdateTicketStatus(Convert.ToInt64(POS_Ticket_ID),Convert.ToInt16(status) ).ToString();
+
+       }
+
+
+       [WebInvoke(Method = "GET",
+                      ResponseFormat = WebMessageFormat.Json,
+                      UriTemplate = "/UpdateTicketAmount/{PG_Ticket_ID},{status},{pos_amount_spent}")]
+       public string UpdateTicketAmount(string PG_Ticket_ID, string status, string pos_amount_spent)
+       {
+
+           DBPreGameAPI api = new DBPreGameAPI();
+           return api.UpdateTicketAmount(Convert.ToInt64(PG_Ticket_ID), Convert.ToInt32(status), Convert.ToDecimal(pos_amount_spent)).ToString();
 
        }
 

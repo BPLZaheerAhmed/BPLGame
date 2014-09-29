@@ -16,7 +16,7 @@ namespace PreGame
         public frmPreGame()
         {
             InitializeComponent();
-            dwvc = new dinnerwere.VirtualClientClient();
+            dwvc = new dinnerwere.VirtualClientClient("http://10.16.68.172:84/VirtualClient");
           //  GetAllTickets();
         }
 

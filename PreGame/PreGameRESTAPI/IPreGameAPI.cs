@@ -22,7 +22,11 @@ namespace PreGameRESTAPI
         [OperationContract]
         string UpdateTicketStatus(string TicketID, string IsUpdated, string status, string POS_Ticket_ID);
 
+
         [OperationContract]
-        string UpdateTicketAmount(string POS_Ticket_ID, string status, string pos_amount_spent);
+        string  UpdateTicketStatusOnly(string POS_Ticket_ID, string status);
+
+        [OperationContract]
+        string UpdateTicketAmount(string PG_Ticket_ID, string status, string pos_amount_spent);
     }
 }

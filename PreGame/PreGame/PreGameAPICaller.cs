@@ -43,9 +43,40 @@ namespace PreGame
             return 0;
         }
 
-        public static int UpdateTicketAmountOnPreGame(Int64 POS_Ticket_ID, Decimal PreGameAmount, int status)
+        public static int UpdateTicketAmountOnPreGame(Int64 PG_Ticket_ID, Decimal PreGameAmount, int status)
         {
-            var request = (HttpWebRequest)WebRequest.Create("http://" + PreGameApiIP + "/PreGameAPI.svc/UpdateTicketAmount/" + POS_Ticket_ID.ToString() + "," + status + "," + PreGameAmount);
+            var request = (HttpWebRequest)WebRequest.Create("http://" + PreGameApiIP + "/PreGameAPI.svc/UpdateTicketAmount/" + PG_Ticket_ID.ToString() + "," + status + "," + PreGameAmount);
+            request.Method = HttpVerb.GET.ToString();
+            request.ContentLength = 0;
+            request.ContentType = "text/xml";
+
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                var responseValue = string.Empty;
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    var message = String.Format("Request failed. Received HTTP {0}", response.StatusCode);
+                    throw new ApplicationException(message);
+                }
+
+                // grab the response
+                using (var responseStream = response.GetResponseStream())
+                {
+                    if (responseStream != null)
+                        using (var reader = new StreamReader(responseStream))
+                        {
+                            string iResult = reader.ReadToEnd();
+                            return 0;
+                        }
+                }
+            }
+            return 0;
+        }
+
+        public static int UpdateTicketStatusOnPreGame(Int64 POS_Ticket_ID,  int status)
+        {
+            var request = (HttpWebRequest)WebRequest.Create("http://" + PreGameApiIP + "/PreGameAPI.svc/UpdateTicketStatusOnly/" + POS_Ticket_ID.ToString() + "," + status );
             request.Method = HttpVerb.GET.ToString();
             request.ContentLength = 0;
             request.ContentType = "text/xml";
