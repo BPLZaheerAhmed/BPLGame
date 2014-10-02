@@ -59,6 +59,7 @@ namespace PreGameRESTAPI
 
         private void UpdateConnectivity(short StoreID, MySqlConnection conn)
         {
+            // change
             Int32 TimeInterval = 0;
             
             MySqlCommand cmdGetInterval = new MySqlCommand("SELECT log_time FROM tbl_stores where id = " + StoreID, conn);
